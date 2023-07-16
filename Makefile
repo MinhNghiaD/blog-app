@@ -2,10 +2,10 @@
 
 PROJECTNAME := $(shell basename "$(PWD)")
 
-.PHONY: update-datbase
-update-vendor:
+.PHONY: database
+database:
 	@echo "  > Update databse" 
-	@dotnet database update
+	@dotnet ef database update
 
 .PHONY: build
 build:
