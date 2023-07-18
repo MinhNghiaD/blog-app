@@ -1,0 +1,39 @@
+@*Pass Model as parameter to the view*@
+@model List<blog_app.Models.Domain.Tag>
+@{
+}
+
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>List tags - Admin functionality</h1>
+    </div>
+</div>
+
+<div class="container" py-5>
+    @if (Model != null && Model.Any())
+    {
+        // bootstrap table iterate through the list and display the tags
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var tag in Model)
+                {
+                    <tr>
+                        <th>@tag.Name</th>
+                        <th>@tag.DisplayName</th>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else 
+    {
+        <p>No tag found</p>
+    }
+</div>
