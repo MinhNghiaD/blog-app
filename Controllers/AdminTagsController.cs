@@ -48,12 +48,46 @@ namespace blog_app.Controllers
         }
 
         [HttpGet]
-        [ActionName("List")]
         public IActionResult List()
         {   
             var tags = _dbContext.Tags.ToList();
 
             return View(tags);
+        }
+
+        [HttpGet("AdminTags/Edit/{tagID}")]
+        public IActionResult Edit(Guid tagID)
+        {   
+            _logger.LogInformation("Editing tag with ID " + tagID);
+            // retrieve tag with tagID received from route
+            Tag tag = _dbContext.Tags.Find(tagID);
+            if (tag == null) {
+                return View(null);
+            }
+
+            EditTagRequest request = new EditTagRequest
+            {
+                ID = tag.ID,
+                Name = tag.Name,
+                DisplayName = tag.DisplayName
+            };
+
+            return View(request);
+        }
+
+        [HttpPost]
+        [ActionName("Edit")]
+        public IActionResult Edit(EditTagRequest request) {
+            _logger.LogInformation("Save tag " + request.ID + " " + request.Name);
+
+            Tag tag = _dbContext.Tags.Find(request.ID);
+            if (tag != null) {
+                tag.Name = request.Name;
+                tag.DisplayName = request.DisplayName;
+                _dbContext.SaveChanges();
+            }
+
+            return RedirectToAction("List");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

@@ -19,14 +19,17 @@
                 <tr>
                     <th>ID</th>
                     <th>Name</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var tag in Model)
                 {
                     <tr>
-                        <th>@tag.Name</th>
-                        <th>@tag.DisplayName</th>
+                        <td>@tag.Name</td>
+                        <td>@tag.DisplayName</td>
+                        @*Pass Tag ID as a route*@
+                        <td><a asp-area="" asp-controller="AdminTags" asp-action="Edit" asp-route-id="@tag.ID">Edit</a></td>
                     </tr>
                 }
             </tbody>

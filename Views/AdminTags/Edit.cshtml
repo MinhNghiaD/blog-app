@@ -1,0 +1,34 @@
+@model blog_app.Models.Views.EditTagRequest
+@{
+}
+
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Edit tag - Admin functionality</h1>
+    </div>
+</div>
+
+<div class="container" py-5>
+    @if (Model != null) 
+    {
+        <form method="post">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="name" asp-for="Name" value=@Model.Name/>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Display Name</label>
+                <input type="text" class="form-control" id="displayName" asp-for="DisplayName" value=@Model.DisplayName/>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-dark">Save</button>
+            </div>
+        </form>
+    }
+    else 
+    {
+        <p>Tag not found</p>
+    }
+</div>
