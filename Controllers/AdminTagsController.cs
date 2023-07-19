@@ -90,6 +90,19 @@ namespace blog_app.Controllers
             return RedirectToAction("List");
         }
 
+        [HttpPost("AdminTags/Delete/{tagID}")]
+        public IActionResult Delete(Guid tagID) {
+            _logger.LogInformation("Deleting tag " + tagID);
+
+            Tag tag = _dbContext.Tags.Find(tagID);
+            if (tag != null) {
+                _dbContext.Tags.Remove(tag);
+                _dbContext.SaveChanges();
+            }
+
+            return RedirectToAction("List");
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
