@@ -7,6 +7,7 @@ using blog_app.Data;
 using blog_app.Models.Domain;
 using blog_app.Models.Views;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace blog_app.Controllers
@@ -26,13 +27,12 @@ namespace blog_app.Controllers
         [HttpGet]
         public IActionResult Add()
         {
-            _logger.LogInformation(message: "view tag");
             return View();
         }
 
         [HttpPost]
         [ActionName("Add")]
-        public IActionResult Post(AddTagRequest request)
+        public async Task<IActionResult> Post(AddTagRequest request)
         {
             Tag newTag = new Tag
             {
@@ -40,27 +40,27 @@ namespace blog_app.Controllers
                 DisplayName = request.DisplayName
             };
 
-            _dbContext.Tags.Add(newTag);
-            _dbContext.SaveChanges();
+            await _dbContext.Tags.AddAsync(newTag);
+            await _dbContext.SaveChangesAsync();
 
             // Render tha Add view
             return RedirectToAction("List");
         }
 
         [HttpGet]
-        public IActionResult List()
+        public async Task<IActionResult> List()
         {   
-            var tags = _dbContext.Tags.ToList();
+            var tags = await _dbContext.Tags.ToListAsync();
 
             return View(tags);
         }
 
         [HttpGet("AdminTags/Edit/{tagID}")]
-        public IActionResult Edit(Guid tagID)
+        public async Task<IActionResult> Edit(Guid tagID)
         {   
             _logger.LogInformation("Editing tag with ID " + tagID);
             // retrieve tag with tagID received from route
-            Tag tag = _dbContext.Tags.Find(tagID);
+            var tag = await _dbContext.Tags.FindAsync(tagID);
             if (tag == null) {
                 return View(null);
             }
@@ -77,10 +77,10 @@ namespace blog_app.Controllers
 
         [HttpPost]
         [ActionName("Edit")]
-        public IActionResult Edit(EditTagRequest request) {
+        public async Task<IActionResult> Edit(EditTagRequest request) {
             _logger.LogInformation("Save tag " + request.ID + " " + request.Name);
 
-            Tag tag = _dbContext.Tags.Find(request.ID);
+            var tag = await _dbContext.Tags.FindAsync(request.ID);
             if (tag != null) {
                 tag.Name = request.Name;
                 tag.DisplayName = request.DisplayName;
@@ -91,10 +91,10 @@ namespace blog_app.Controllers
         }
 
         [HttpPost("AdminTags/Delete/{tagID}")]
-        public IActionResult Delete(Guid tagID) {
+        public async Task<IActionResult> Delete(Guid tagID) {
             _logger.LogInformation("Deleting tag " + tagID);
 
-            Tag tag = _dbContext.Tags.Find(tagID);
+            var tag = await _dbContext.Tags.FindAsync(tagID);
             if (tag != null) {
                 _dbContext.Tags.Remove(tag);
                 _dbContext.SaveChanges();
