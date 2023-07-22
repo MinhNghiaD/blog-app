@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using blog_app.Data;
 using blog_app.Models.Domain;
 using blog_app.Models.Views;
+using blog_app.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace blog_app.Controllers
 {
@@ -16,12 +9,12 @@ namespace blog_app.Controllers
     public class AdminTagsController : Controller
     {
         private readonly ILogger<AdminTagsController> _logger;
-        private readonly BlogDbContext _dbContext;
+        private readonly ITagRepository _repository;
 
-        public AdminTagsController(ILogger<AdminTagsController> logger, BlogDbContext dbContext)
+        public AdminTagsController(ILogger<AdminTagsController> logger, ITagRepository repository)
         {
             _logger = logger;
-            _dbContext = dbContext;
+            _repository = repository;
         }
         
         [HttpGet]
@@ -32,7 +25,7 @@ namespace blog_app.Controllers
 
         [HttpPost]
         [ActionName("Add")]
-        public async Task<IActionResult> Post(AddTagRequest request)
+        public async Task<IActionResult> Add(AddTagRequest request)
         {
             Tag newTag = new Tag
             {
@@ -40,8 +33,7 @@ namespace blog_app.Controllers
                 DisplayName = request.DisplayName
             };
 
-            await _dbContext.Tags.AddAsync(newTag);
-            await _dbContext.SaveChangesAsync();
+            await _repository.WriteTagAsync(newTag);
 
             // Render tha Add view
             return RedirectToAction("List");
@@ -50,8 +42,7 @@ namespace blog_app.Controllers
         [HttpGet]
         public async Task<IActionResult> List()
         {   
-            var tags = await _dbContext.Tags.ToListAsync();
-
+            var tags = await _repository.ListTagAsync();
             return View(tags);
         }
 
@@ -60,7 +51,7 @@ namespace blog_app.Controllers
         {   
             _logger.LogInformation("Editing tag with ID " + tagID);
             // retrieve tag with tagID received from route
-            var tag = await _dbContext.Tags.FindAsync(tagID);
+            var tag = await _repository.ReadTagAsync(tagID);
             if (tag == null) {
                 return View(null);
             }
@@ -80,12 +71,14 @@ namespace blog_app.Controllers
         public async Task<IActionResult> Edit(EditTagRequest request) {
             _logger.LogInformation("Save tag " + request.ID + " " + request.Name);
 
-            var tag = await _dbContext.Tags.FindAsync(request.ID);
-            if (tag != null) {
-                tag.Name = request.Name;
-                tag.DisplayName = request.DisplayName;
-                _dbContext.SaveChanges();
-            }
+            Tag tag = new Tag
+            {
+                ID = request.ID,
+                Name = request.Name,
+                DisplayName = request.DisplayName
+            };
+
+            await _repository.WriteTagAsync(tag);
 
             return RedirectToAction("List");
         }
@@ -94,11 +87,7 @@ namespace blog_app.Controllers
         public async Task<IActionResult> Delete(Guid tagID) {
             _logger.LogInformation("Deleting tag " + tagID);
 
-            var tag = await _dbContext.Tags.FindAsync(tagID);
-            if (tag != null) {
-                _dbContext.Tags.Remove(tag);
-                _dbContext.SaveChanges();
-            }
+            await _repository.DeleteTagAsync(tagID);
 
             return RedirectToAction("List");
         }
