@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace blog_app.Controllers
 {
     //[Route("[controller]")]
-    public class AdminTagsController : Controller
+    public class TagsController : Controller
     {
-        private readonly ILogger<AdminTagsController> _logger;
+        private readonly ILogger<TagsController> _logger;
         private readonly ITagRepository _repository;
 
-        public AdminTagsController(ILogger<AdminTagsController> logger, ITagRepository repository)
+        public TagsController(ILogger<TagsController> logger, ITagRepository repository)
         {
             _logger = logger;
             _repository = repository;
@@ -46,7 +46,7 @@ namespace blog_app.Controllers
             return View(tags);
         }
 
-        [HttpGet("AdminTags/Edit/{tagID}")]
+        [HttpGet("Tags/Edit/{tagID}")]
         public async Task<IActionResult> Edit(Guid tagID)
         {   
             _logger.LogInformation("Editing tag with ID " + tagID);
@@ -83,7 +83,7 @@ namespace blog_app.Controllers
             return RedirectToAction("List");
         }
 
-        [HttpPost("AdminTags/Delete/{tagID}")]
+        [HttpPost("Tags/Delete/{tagID}")]
         public async Task<IActionResult> Delete(Guid tagID) {
             _logger.LogInformation("Deleting tag " + tagID);
 

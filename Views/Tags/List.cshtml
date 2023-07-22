@@ -29,8 +29,8 @@
                         <td>@tag.Name</td>
                         <td>@tag.DisplayName</td>
                         @*Pass Tag ID as a route*@
-                        <td><a asp-area="" asp-controller="AdminTags" asp-action="Edit" asp-route-id="@tag.ID">Edit</a></td>
-                        <td onclick="confirmAndDelete('@Url.Action("Delete", "AdminTags", new { id = tag.ID})')">Delete</td>
+                        <td><a asp-area="" asp-controller="Tags" asp-action="Edit" asp-route-id="@tag.ID">Edit</a></td>
+                        <td onclick="confirmAndDelete('@Url.Action("Delete", "Tags", new { id = tag.ID})')">Delete</td>
                     </tr>
                 }
             </tbody>
