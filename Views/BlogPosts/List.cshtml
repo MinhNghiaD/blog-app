@@ -1,37 +1,47 @@
 @*Pass Model as parameter to the view*@
-@model List<blog_app.Models.Domain.Tag>
+@model List<blog_app.Models.Domain.BlogPost>
 @{
 }
 
 
 <div class="bg-secondary bg-opacity-10 py-2">
     <div class="container">
-        <h1>List tags - Admin functionality</h1>
+        <h1>Blog Posts List</h1>
     </div>
 </div>
 
 <div class="container" py-5>
     @if (Model != null && Model.Any())
     {
-        // bootstrap table iterate through the list and display the tags
+        // bootstrap table iterate through the list and display the blog posts
         <table class="table">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Display name</th>
-                    <th></th>
-                    <th></th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Tags</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var tag in Model)
+                @foreach (var blogPost in Model)
                 {
                     <tr>
-                        <td>@tag.Name</td>
-                        <td>@tag.DisplayName</td>
-                        @*Pass Tag ID as a route*@
-                        <td><a asp-area="" asp-controller="Tags" asp-action="Edit" asp-route-id="@tag.ID">Edit</a></td>
+                        <td>@blogPost.PageTitle</td>
+                        <td>@blogPost.Author</td>
+                        <td>
+                            @if (blogPost.Tags != null && blogPost.Tags.Any())
+                            {
+                                @foreach (var tag in blogPost.Tags)
+                                {
+                                    <span class="badge bg-secondary me-1">@tag.DisplayName</span>
+                                }
+                            }                    
+                        </td>
+
+                        @*Pass Tag ID as a route
+                        <td><a asp-area="" asp-controller="BlogPosts" asp-action="Edit" asp-route-id="@tag.ID">Edit</a></td>
                         <td onclick="confirmAndDelete('@Url.Action("Delete", "Tags", new { id = tag.ID})')">Delete</td>
+                        *@
                     </tr>
                 }
             </tbody>
@@ -46,7 +56,7 @@
 
 <script>
     function confirmAndDelete(deleteUrl) {
-        if (confirm('Are you sure you want to delete this tag?')) {
+        if (confirm('Are you sure you want to delete this post?')) {
             fetch(deleteUrl, { method: 'POST' })
                 .then(response => {
                     if (response.ok) {

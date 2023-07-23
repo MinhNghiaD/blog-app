@@ -69,10 +69,15 @@ namespace blog_app.Controllers
             }
 
             await _blogPostsRepository.WriteBlogPostAsync(blogPost);
-
             // Render the Add view
             return RedirectToAction("Add");
         }
 
+        [HttpGet]
+        public async Task<IActionResult> List()
+        {   
+            var blogPosts = await _blogPostsRepository.ListBlogPostsAsync();
+            return View(blogPosts);
+        }
     }
 }

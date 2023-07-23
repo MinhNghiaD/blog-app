@@ -18,5 +18,10 @@ namespace blog_app.Repositories
             await _dbContext.BlogPosts.AddAsync(blogPost);
             return await _dbContext.SaveChangesAsync();
         }
+
+        public Task<List<BlogPost>> ListBlogPostsAsync()
+        {
+            return _dbContext.BlogPosts.Include(x => x.Tags).ToListAsync();
+        }
     }
 }
