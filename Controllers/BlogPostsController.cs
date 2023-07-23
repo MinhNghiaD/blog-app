@@ -151,5 +151,20 @@ namespace blog_app.Controllers
             await _blogPostsRepository.WriteBlogPostAsync(blogPost);
             return RedirectToAction("List");
         }
+
+        [HttpPost("BlogPosts/Delete/{blogPostID}")]
+        public async Task<IActionResult> Delete(Guid blogPostID) {
+            _logger.LogInformation("Deleting blog post " + blogPostID);
+
+            await _blogPostsRepository.DeleteBlogPostAsync(blogPostID);
+
+            return RedirectToAction("List");
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View("Error!");
+        }
     }
 }

@@ -46,5 +46,17 @@ namespace blog_app.Repositories
         {
             return _dbContext.BlogPosts.Include(x => x.Tags).ToListAsync();
         }
+
+        public async Task<bool> DeleteBlogPostAsync(Guid ID)
+        {
+            var blogPost = await ReadBlogPostAsync(ID);
+            if (blogPost != null) {
+                _dbContext.BlogPosts.Remove(blogPost);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
+        }
     }
 }

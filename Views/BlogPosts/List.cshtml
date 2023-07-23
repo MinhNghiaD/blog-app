@@ -39,10 +39,7 @@
                             }                    
                         </td>
                         <td><a asp-area="" asp-controller="BlogPosts" asp-action="Edit" asp-route-id="@blogPost.ID">Edit</a></td>
-
-                        @*Pass Tag ID as a route
-                        <td onclick="confirmAndDelete('@Url.Action("Delete", "Tags", new { id = tag.ID})')">Delete</td>
-                        *@
+                        <td onclick="confirmAndDelete('@Url.Action("Delete", "BlogPosts", new { id = blogPost.ID})')"><span class="badge bg-danger me-1">Delete</span></td>
                     </tr>
                 }
             </tbody>
@@ -50,7 +47,7 @@
     }
     else
     {
-        <p>No tag found</p>
+        <p>No post found</p>
     }
 </div>
 

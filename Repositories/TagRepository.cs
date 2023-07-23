@@ -45,7 +45,7 @@ namespace blog_app.Repositories
             var tag = await ReadTagAsync(tagID);
             if (tag != null) {
                 _dbContext.Tags.Remove(tag);
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
                 return true;
             }
 
