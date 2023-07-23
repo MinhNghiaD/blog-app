@@ -9,6 +9,7 @@ builder.Services.AddControllersWithViews();
 // Dependency injection to inject DbContext to Services of server
 builder.Services.AddDbContext<BlogDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("BlogDbConnectionString")));
 builder.Services.AddScoped<ITagRepository, TagRepository>();
+builder.Services.AddScoped<IBlogPostsRepository, BlogPostsRepository>();
 
 var app = builder.Build();
 

@@ -1,0 +1,60 @@
+@model blog_app.Models.Views.AddBlogPostRequest
+@{
+}
+
+
+<div class="bg-secondary bg-opacity-10 py-2">
+    <div class="container">
+        <h1>Add new blog post</h1>
+    </div>
+</div>
+
+<div class="container" py-5>
+    <form method="post">
+        <div class="mb-3">
+            <label class="form-label">Heading</label>
+            <input type="text" class="form-control" id="heading" asp-for="Heading"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input type="text" class="form-control" id="title" asp-for="PageTitle"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Content</label>
+            <input type="text" class="form-control" id="content" asp-for="Content"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" id="description" asp-for="ShortDescription"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Image</label>
+            <input type="text" class="form-control" id="imageUrl" asp-for="FeatureImageUrl"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Date</label>
+            <input type="date" class="form-control" id="publishDate" asp-for="PublishDate"/>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Author</label>
+            <input type="text" class="form-control" id="author" asp-for="Author"/>
+        </div>
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" name="visible" id="visible" asp-for="Visible">
+            <label class="form-check-label">
+                Visible
+            </label>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Tags</label>
+            <select class="form-select" asp-for="SelectedTagIDs" asp-items=@Model.Tags>
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-dark">Save</button>
+        </div>
+    </form>
+</div>
