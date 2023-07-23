@@ -12,5 +12,11 @@ namespace blog_app.Repositories
         {
             _dbContext = dbContext;
         }
+
+        public async Task<int> WriteBlogPostAsync(BlogPost blogPost)
+        {
+            await _dbContext.BlogPosts.AddAsync(blogPost);
+            return await _dbContext.SaveChangesAsync();
+        }
     }
 }

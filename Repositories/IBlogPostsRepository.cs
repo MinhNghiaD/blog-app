@@ -4,6 +4,6 @@ namespace blog_app.Repositories
 {
     public interface IBlogPostsRepository
     {
-        
+        public Task<int> WriteBlogPostAsync(BlogPost blogPost);
     }
 }

@@ -41,5 +41,38 @@ namespace blog_app.Controllers
 
             return View(request);
         }
+
+        [HttpPost]
+        [ActionName("Add")]
+        public async Task<IActionResult> Add(AddBlogPostRequest request)
+        {
+            BlogPost blogPost = new BlogPost
+            {
+                Heading = request.Heading,
+                PageTitle = request.PageTitle,
+                Content = request.Content,
+                ShortDescription = request.ShortDescription,
+                FeatureImageUrl = request.FeatureImageUrl,
+                UrlHandle = request.UrlHandle,
+                PublishDate = request.PublishDate,
+                Author = request.Author,
+                Visible = request.Visible,
+                Tags = new List<Tag>()
+            };
+
+            foreach (Guid tagID in request.SelectedTagIDs) {
+                var tag = await _tagRepository.ReadTagAsync(tagID);
+                if (tag != null) 
+                {
+                    blogPost.Tags.Add(tag);
+                }
+            }
+
+            await _blogPostsRepository.WriteBlogPostAsync(blogPost);
+
+            // Render the Add view
+            return RedirectToAction("Add");
+        }
+
     }
 }
