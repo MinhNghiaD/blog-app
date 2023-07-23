@@ -13,9 +13,9 @@ namespace blog_app.Repositories
             _dbContext = dbContext;
         }
 
-        public ValueTask<Tag?> ReadTagAsync(Guid tagID)
+        public Task<Tag> ReadTagAsync(Guid tagID)
         {
-            return _dbContext.Tags.FindAsync(tagID);
+            return _dbContext.Tags.FirstAsync(x => x.ID == tagID);
         }
 
         public async Task<int> WriteTagAsync(Tag tag)
@@ -31,7 +31,6 @@ namespace blog_app.Repositories
                 existingTag.Name = tag.Name;
                 existingTag.DisplayName = tag.DisplayName;
             }
-
             
             return await _dbContext.SaveChangesAsync();
         }

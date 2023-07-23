@@ -79,5 +79,77 @@ namespace blog_app.Controllers
             var blogPosts = await _blogPostsRepository.ListBlogPostsAsync();
             return View(blogPosts);
         }
+
+        [HttpGet("BlogPosts/Edit/{blogPostID}")]
+        public async Task<IActionResult> Edit(Guid blogPostID)
+        {   
+            _logger.LogInformation("Editing post with ID " + blogPostID);
+            // retrieve blog post with ID received from route
+            var blogPost = await _blogPostsRepository.ReadBlogPostAsync(blogPostID);
+            if (blogPost == null) {
+                return View(null);
+            }
+
+            EditBlogPostRequest request = new EditBlogPostRequest
+            {
+                ID = blogPost.ID,
+                Heading = blogPost.Heading,
+                PageTitle = blogPost.PageTitle,
+                Content = blogPost.Content,
+                ShortDescription = blogPost.ShortDescription,
+                FeatureImageUrl = blogPost.FeatureImageUrl,
+                UrlHandle = blogPost.UrlHandle,
+                PublishDate = blogPost.PublishDate,
+                Author = blogPost.Author,
+                Visible = blogPost.Visible,
+                Tags = new List<SelectListItem>()
+            };
+
+            ICollection<Tag> selectedTags = blogPost.Tags;
+            List<Tag> tags = await _tagRepository.ListTagAsync();
+            foreach(Tag tag in tags) {
+                var item = new SelectListItem
+                {
+                    Text = tag.DisplayName,
+                    Value = tag.ID.ToString(),
+                    Selected = selectedTags.Contains(tag)
+                };
+
+
+                request.Tags.Add(item);
+            }
+
+            return View(request);
+        }
+
+        [HttpPost]
+        [ActionName("Edit")]
+        public async Task<IActionResult> Edit(EditBlogPostRequest request) {
+            BlogPost blogPost = new BlogPost
+            {
+                ID = request.ID,
+                Heading = request.Heading,
+                PageTitle = request.PageTitle,
+                Content = request.Content,
+                ShortDescription = request.ShortDescription,
+                FeatureImageUrl = request.FeatureImageUrl,
+                UrlHandle = request.UrlHandle,
+                PublishDate = request.PublishDate,
+                Author = request.Author,
+                Visible = request.Visible,
+                Tags = new List<Tag>()
+            };
+
+            foreach (Guid tagID in request.SelectedTagIDs) {
+                var tag = await _tagRepository.ReadTagAsync(tagID);
+                if (tag != null) 
+                {
+                    blogPost.Tags.Add(tag);
+                }
+            }
+
+            await _blogPostsRepository.WriteBlogPostAsync(blogPost);
+            return RedirectToAction("List");
+        }
     }
 }

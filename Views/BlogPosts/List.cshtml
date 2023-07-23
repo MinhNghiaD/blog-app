@@ -20,6 +20,7 @@
                     <th>Title</th>
                     <th>Author</th>
                     <th>Tags</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -37,9 +38,9 @@
                                 }
                             }                    
                         </td>
+                        <td><a asp-area="" asp-controller="BlogPosts" asp-action="Edit" asp-route-id="@blogPost.ID">Edit</a></td>
 
                         @*Pass Tag ID as a route
-                        <td><a asp-area="" asp-controller="BlogPosts" asp-action="Edit" asp-route-id="@tag.ID">Edit</a></td>
                         <td onclick="confirmAndDelete('@Url.Action("Delete", "Tags", new { id = tag.ID})')">Delete</td>
                         *@
                     </tr>
