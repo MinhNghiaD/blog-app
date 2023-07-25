@@ -5,7 +5,7 @@
 
 <div class="bg-secondary bg-opacity-10 py-2">
     <div class="container">
-        <h1>Add new blog post</h1>
+        <h1>Edit blog post</h1>
     </div>
 </div>
 
@@ -21,7 +21,7 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Content</label>
-            <input type="text" class="form-control" id="content" asp-for="Content" value=@Model.Content/>
+            <textarea class="form-control" id="content" asp-for="Content" value=@Model.Content></textarea>
         </div>
         <div class="mb-3">
             <label class="form-label">Description</label>
@@ -62,3 +62,10 @@
         </div>
     </form>
 </div>
+
+
+@section Scripts {
+    <script>
+        var editor = new FroalaEditor('#content');
+    </script>
+}
