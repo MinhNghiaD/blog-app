@@ -6,15 +6,16 @@ namespace blog_app.Repositories
 {
     public class BlogPostsRepository : IBlogPostsRepository
     {
-        public Task<BlogPost?> ReadBlogPostAsync(Guid ID)
-        {
-            return _dbContext.BlogPosts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.ID == ID);
-        }
         private readonly BlogDbContext _dbContext;
 
         public BlogPostsRepository(BlogDbContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public Task<BlogPost?> ReadBlogPostAsync(Guid ID)
+        {
+            return _dbContext.BlogPosts.Include(x => x.Tags).FirstOrDefaultAsync(x => x.ID == ID);
         }
 
         public async Task<int> WriteBlogPostAsync(BlogPost blogPost)

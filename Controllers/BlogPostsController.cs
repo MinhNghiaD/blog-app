@@ -52,7 +52,7 @@ namespace blog_app.Controllers
                 PageTitle = request.PageTitle,
                 Content = request.Content,
                 ShortDescription = request.ShortDescription,
-                FeatureImageUrl = request.FeatureImageUrl,
+                //FeatureImageUrl = request.FeatureImageUrl,
                 UrlHandle = request.UrlHandle,
                 PublishDate = request.PublishDate,
                 Author = request.Author,
