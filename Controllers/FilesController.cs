@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using blog_app.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,6 +42,19 @@ namespace blog_app.Controllers
 
             string url = await _fileRepository.UploadAsync(file);
             return new JsonResult(new {url= _fileRepository.UploadAsync(file)});
+        }
+
+        [HttpGet("{uri}")]
+        public async Task<IActionResult> Get(string uri) 
+        {
+            byte[] imageData = await _fileRepository.GetAsync(uri);
+            if (imageData == null || imageData.Length == 0) 
+            {
+                return NotFound();
+            }
+
+            // Create an IFormFile instance
+            return File(imageData, "application/octet-stream", uri);
         }
     }
 }

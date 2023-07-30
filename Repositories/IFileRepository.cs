@@ -8,6 +8,6 @@ namespace blog_app.Repositories
     public interface IFileRepository
     {
         public Task<string> UploadAsync(IFormFile file);
-        public Task<IFormFile> LoadAsync(string url);
+        public Task<byte[]> GetAsync(string uri);
     }
 }
