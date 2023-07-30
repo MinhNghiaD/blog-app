@@ -10,7 +10,7 @@
 </div>
 
 <div class="container" py-5>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label">Heading</label>
             <input type="text" class="form-control" id="heading" asp-for="Heading"/>
@@ -29,7 +29,8 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Image</label>
-            <input type="file" class="form-control-file" id="imageUrl" asp-for="FeatureImageFile"/>
+            <input type="file" class="form-control" id="featureImageFile" asp-for="FeatureImageFile"/>
+            <img id="previewImage" src="#" alt="Selected Photo" style="display: none;" />
         </div>
         <div class="mb-3">
             <label class="form-label">URL Handle</label>
@@ -66,5 +67,25 @@
 @section Scripts {
     <script>
         var editor = new FroalaEditor('#content');
+    </script>
+
+    <script>
+        document.getElementById('featureImageFile').addEventListener('change', function(event) {
+            const fileInput = event.target;
+            const previewImage = document.getElementById('previewImage');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                previewImage.style.display = 'none';
+            }
+        });
     </script>
 }

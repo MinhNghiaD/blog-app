@@ -45,7 +45,7 @@ namespace blog_app.Controllers
             }
 
             string url = await _fileRepository.UploadAsync(file);
-            return Accepted(url);
+            return new JsonResult(new {url= _fileRepository.UploadAsync(file)});
         }
     }
 }

@@ -10,7 +10,7 @@
 </div>
 
 <div class="container" py-5>
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label">Heading</label>
             <input type="text" class="form-control" id="heading" asp-for="Heading"  value=@Model.Heading/>
@@ -29,7 +29,8 @@
         </div>
         <div class="mb-3">
             <label class="form-label">Image</label>
-            <input type="text" class="form-control" id="imageUrl" asp-for="FeatureImageUrl" value=@Model.FeatureImageUrl/>
+            <input type="file" class="form-control" id="featureImageFile" asp-for="FeatureImageFile"/>
+            <img id="previewImage" src="#" alt="Selected Photo" style="display: none;" />
         </div>
         <div class="mb-3">
             <label class="form-label">URL Handle</label>

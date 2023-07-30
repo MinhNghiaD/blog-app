@@ -11,12 +11,14 @@ namespace blog_app.Controllers
         private readonly ILogger<BlogPostsController> _logger;
         private readonly IBlogPostsRepository _blogPostsRepository;
         private readonly ITagRepository _tagRepository;
+        private readonly IFileRepository _imageRepository;
 
-        public BlogPostsController(ILogger<BlogPostsController> logger, IBlogPostsRepository blogPostsRepository, ITagRepository tagRepository)
+        public BlogPostsController(ILogger<BlogPostsController> logger, IBlogPostsRepository blogPostsRepository, ITagRepository tagRepository, IFileRepository imageRepository)
         {
             _logger = logger;
             _blogPostsRepository = blogPostsRepository;
             _tagRepository = tagRepository;
+            _imageRepository = imageRepository;
         }
 
         [HttpGet]
@@ -46,13 +48,39 @@ namespace blog_app.Controllers
         [ActionName("Add")]
         public async Task<IActionResult> Add(AddBlogPostRequest request)
         {
+            // Verify image input
+            if (request.FeatureImageFile == null || request.FeatureImageFile.Length == 0)
+            {
+                // Handle the case when no file is selected for upload
+                return ValidationProblem(
+                    new ValidationProblemDetails
+                    {
+                        Status = 400, // Bad Request status code
+                        Title = "Bad input.",
+                        Detail = "Please correct the specified validation errors and try again.",
+                    }
+                );
+            }
+
+            if (request.FeatureImageFile.Length > 10485760) // 10 MB (1024 * 1024 * 10)
+            {
+                return ValidationProblem(
+                    new ValidationProblemDetails
+                    {
+                        Status = 400, // Bad Request status code
+                        Title = "File size exceed.",
+                        Detail = "Please correct the specified validation errors and try again.",
+                    }
+                );            
+            }
+
             BlogPost blogPost = new BlogPost
             {
                 Heading = request.Heading,
                 PageTitle = request.PageTitle,
                 Content = request.Content,
                 ShortDescription = request.ShortDescription,
-                //FeatureImageUrl = request.FeatureImageUrl,
+                FeatureImageUrl = await _imageRepository.UploadAsync(request.FeatureImageFile),
                 UrlHandle = request.UrlHandle,
                 PublishDate = request.PublishDate,
                 Author = request.Author,
@@ -69,8 +97,8 @@ namespace blog_app.Controllers
             }
 
             await _blogPostsRepository.WriteBlogPostAsync(blogPost);
-            // Render the Add view
-            return RedirectToAction("Add");
+            // Render the List view
+            return RedirectToAction("List");
         }
 
         [HttpGet]
@@ -97,7 +125,6 @@ namespace blog_app.Controllers
                 PageTitle = blogPost.PageTitle,
                 Content = blogPost.Content,
                 ShortDescription = blogPost.ShortDescription,
-                FeatureImageUrl = blogPost.FeatureImageUrl,
                 UrlHandle = blogPost.UrlHandle,
                 PublishDate = blogPost.PublishDate,
                 Author = blogPost.Author,
@@ -125,6 +152,26 @@ namespace blog_app.Controllers
         [HttpPost]
         [ActionName("Edit")]
         public async Task<IActionResult> Edit(EditBlogPostRequest request) {
+            // Verify image input
+            if (request.FeatureImageFile != null)
+            {
+                if  (request.FeatureImageFile.Length == 0 || request.FeatureImageFile.Length > 10485760) 
+                {
+                     // Handle the case when no file is selected for upload
+                    return ValidationProblem(
+                        new ValidationProblemDetails
+                        {
+                            Status = 400, // Bad Request status code
+                            Title = "Bad image input.",
+                            Detail = "Please correct the specified validation errors and try again.",
+                        }
+                    );
+                }
+
+                // Upload new image
+                request.FeatureImageUrl = await _imageRepository.UploadAsync(request.FeatureImageFile);
+            }
+
             BlogPost blogPost = new BlogPost
             {
                 ID = request.ID,

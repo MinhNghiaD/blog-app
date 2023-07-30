@@ -9,6 +9,7 @@ namespace blog_app.Models.Views
         public string PageTitle { get; set; }
         public string Content { get; set; }
         public string ShortDescription { get; set; }
+        public IFormFile FeatureImageFile { get; set; }
         public string FeatureImageUrl { get; set; }
         public string UrlHandle { get; set; }
         public DateTime PublishDate { get; set; }
