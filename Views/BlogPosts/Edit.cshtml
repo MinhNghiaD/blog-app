@@ -30,7 +30,7 @@
         <div class="mb-3">
             <label class="form-label">Image</label>
             <input type="file" class="form-control" id="featureImageFile" asp-for="FeatureImageFile"/>
-            <img id="previewImage" src="#" alt="Selected Photo" style="display: none;" />
+            <img id="previewImage" src="http://localhost:8080/api/files/@Model.FeatureImageUrl" alt="Selected Photo" />
         </div>
         <div class="mb-3">
             <label class="form-label">Image URL</label>
@@ -72,7 +72,25 @@
 @section Scripts {
     <script>
         var editor = new FroalaEditor('#content', {
-            imageUploadURL: 'api/files'
+            imageUploadURL: '/api/files'
+        });
+    </script>
+
+    <script>
+        document.getElementById('featureImageFile').addEventListener('change', function(event) {
+            const fileInput = event.target;
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                var previewImage = document.getElementById('previewImage');
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+                };
+
+                reader.readAsDataURL(fileInput.files[0]);
+            } else {
+                previewImage.style.display = 'none';
+            }
         });
     </script>
 }

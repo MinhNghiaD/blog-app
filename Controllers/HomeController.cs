@@ -1,20 +1,32 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using blog_app.Models;
+using blog_app.Models.Views;
+using blog_app.Repositories;
 
 namespace blog_app.Controllers {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IBlogPostsRepository _blogPostsRepository;
+        private readonly ITagRepository _tagRepository;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IBlogPostsRepository blogPostsRepository, ITagRepository tagRepository)
         {
             _logger = logger;
+            _blogPostsRepository = blogPostsRepository;
+            _tagRepository = tagRepository;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            HomeViewModel homeView = new HomeViewModel 
+            {
+                BlogPosts = await _blogPostsRepository.ListBlogPostsAsync(),
+                Tags = await _tagRepository.ListTagAsync()
+            };
+
+            return View(homeView);
         }
 
         public IActionResult Privacy()

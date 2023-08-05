@@ -39,9 +39,8 @@ namespace blog_app.Controllers
                     }
                 );            
             }
-
-            string url = await _fileRepository.UploadAsync(file);
-            return new JsonResult(new {url= _fileRepository.UploadAsync(file)});
+            string uri =  await _fileRepository.UploadAsync(file);
+            return new JsonResult(new {link = "http://localhost:8080/api/files/" + uri});
         }
 
         [HttpGet("{uri}")]
