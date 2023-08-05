@@ -13,19 +13,19 @@
     <form method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label class="form-label">Heading</label>
-            <input type="text" class="form-control" id="heading" asp-for="Heading"  value=@Model.Heading/>
+            <input type="text" class="form-control" id="heading" asp-for="Heading"/>
         </div>
         <div class="mb-3">
             <label class="form-label">Title</label>
-            <input type="text" class="form-control" id="title" asp-for="PageTitle" value=@Model.PageTitle/>
+            <input type="text" class="form-control" id="title" asp-for="PageTitle"/>
         </div>
         <div class="mb-3">
             <label class="form-label">Content</label>
-            <textarea class="form-control" id="content" asp-for="Content" value=@Model.Content></textarea>
+            <textarea class="form-control" id="content" asp-for="Content"></textarea>
         </div>
         <div class="mb-3">
             <label class="form-label">Description</label>
-            <input type="text" class="form-control" id="description" asp-for="ShortDescription" value=@Model.ShortDescription/>
+            <input type="text" class="form-control" id="description" asp-for="ShortDescription"/>
         </div>
         <div class="mb-3">
             <label class="form-label">Image</label>
@@ -33,19 +33,23 @@
             <img id="previewImage" src="#" alt="Selected Photo" style="display: none;" />
         </div>
         <div class="mb-3">
+            <label class="form-label">Image URL</label>
+            <input type="text" class="form-control" id="featureImageUrl" asp-for="FeatureImageUrl"/>
+        </div>
+        <div class="mb-3">
             <label class="form-label">URL Handle</label>
-            <input type="text" class="form-control" id="urlHandle" asp-for="UrlHandle" value=@Model.UrlHandle/>
+            <input type="text" class="form-control" id="urlHandle" asp-for="UrlHandle">
         </div>
         <div class="mb-3">
             <label class="form-label">Date</label>
-            <input type="date" class="form-control" id="publishDate" asp-for="PublishDate" value=@Model.PublishDate/>
+            <input type="date" class="form-control" id="publishDate" asp-for="PublishDate"/>
         </div>
         <div class="mb-3">
             <label class="form-label">Author</label>
-            <input type="text" class="form-control" id="author" asp-for="Author" value=@Model.Author/>
+            <input type="text" class="form-control" id="author" asp-for="Author"/>
         </div>
         <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" name="visible" id="visible" asp-for="Visible" value=@Model.Visible>
+            <input class="form-check-input" type="checkbox" name="visible" id="visible"/>
             <label class="form-check-label">
                 Visible
             </label>
@@ -67,6 +71,8 @@
 
 @section Scripts {
     <script>
-        var editor = new FroalaEditor('#content');
+        var editor = new FroalaEditor('#content', {
+            imageUploadURL: 'api/files'
+        });
     </script>
 }

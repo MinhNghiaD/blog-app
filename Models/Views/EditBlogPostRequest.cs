@@ -15,7 +15,6 @@ namespace blog_app.Models.Views
         public DateTime PublishDate { get; set; }
         public string Author { get; set; }
         public bool Visible { get; set; }
-
         public List<SelectListItem> Tags { get; set; }
         public List<Guid> SelectedTagIDs { get; set; }
     }

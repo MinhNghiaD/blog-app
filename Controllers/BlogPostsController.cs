@@ -110,8 +110,7 @@ namespace blog_app.Controllers
 
         [HttpGet("BlogPosts/Edit/{blogPostID}")]
         public async Task<IActionResult> Edit(Guid blogPostID)
-        {   
-            _logger.LogInformation("Editing post with ID " + blogPostID);
+        {               
             // retrieve blog post with ID received from route
             var blogPost = await _blogPostsRepository.ReadBlogPostAsync(blogPostID);
             if (blogPost == null) {
@@ -125,6 +124,7 @@ namespace blog_app.Controllers
                 PageTitle = blogPost.PageTitle,
                 Content = blogPost.Content,
                 ShortDescription = blogPost.ShortDescription,
+                FeatureImageUrl = blogPost.FeatureImageUrl,
                 UrlHandle = blogPost.UrlHandle,
                 PublishDate = blogPost.PublishDate,
                 Author = blogPost.Author,
@@ -146,16 +146,19 @@ namespace blog_app.Controllers
                 request.Tags.Add(item);
             }
 
+            _logger.LogWarning("Editing post with ID " + request.ID + " With Image URL " + request.FeatureImageUrl + " publish Date " + request.PublishDate);
+
             return View(request);
         }
 
         [HttpPost]
         [ActionName("Edit")]
         public async Task<IActionResult> Edit(EditBlogPostRequest request) {
+            _logger.LogWarning("Edted Blog ID " +  request.ID + " Image URL " + request.FeatureImageUrl);
             // Verify image input
             if (request.FeatureImageFile != null)
             {
-                if  (request.FeatureImageFile.Length == 0 || request.FeatureImageFile.Length > 10485760) 
+                if (request.FeatureImageFile.Length == 0 || request.FeatureImageFile.Length > 10485760) 
                 {
                      // Handle the case when no file is selected for upload
                     return ValidationProblem(
